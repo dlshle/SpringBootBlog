@@ -233,6 +233,8 @@ var PostDetail = {
                 return
             } else {
                 this.post = res.data
+                // DEBUGGING
+                console.log(this.post);
             }
         }.bind(this))
     },
@@ -243,6 +245,43 @@ var PostDetail = {
         compiledMarkdown: function () {
             return marked(this.post.content)
         }
+    }
+}
+
+var UserDetail = {
+    template: '#user-detail',
+    data: function () {
+        return {
+            user: {
+                name: '',
+                password: '',
+                fullName: '',
+                classTaken: '',
+                classList: [],
+                funStuff: '',
+                otherStuff: '',
+                links:  '',
+                linkList: []
+            }
+        }
+    },
+    mounted: function () {
+        axios.get('/api/user/' + this.$route.params.id).then(function (res) {
+            if (res.data.error) {
+                handleError(res.data.error)
+                return
+            } else {
+                this.user = res.data;
+                // DEBUGGING
+                console.log(res.data);
+                if (this.user.classTaken && this.user.classTaken.length > 0)
+                    this.user.classList = this.user.classTaken.split(",");
+                if (this.user.links && this.user.links.length > 0)
+                    this.user.linkList = this.user.links.split(",");
+                // DEBUGGING
+                console.log(this.user);
+            }
+        }.bind(this))
     }
 }
 
@@ -297,6 +336,7 @@ var routes = [
     {path: '/signup', component: SignupForm},
     {path: '/posts/new', component: NewPost},
     {path: '/posts/:id', component: PostDetail},
+    {path: '/users/:id', component: UserDetail}
 ]
 
 var router = new VueRouter({

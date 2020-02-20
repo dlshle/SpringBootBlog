@@ -60,11 +60,38 @@
 </script>
 
 <!--posts list template-->
+<script id="user-detail" type="text/x-template">
+    <div>
+    <h1 class="has-text-centered">All about {{ user.fullName }}!</h1>
+    Hi, my name is {{ user.fullName }}! It's very nice to meet you! Here, you
+    can see all the information about me!
+    <h2>Classes I've taken:</h2>
+    <ul>
+        <li v-for="theClass in user.classList">
+            <p>{{theClass}}</p>
+        </li>
+    </ul>
+    <h2>Some fun stuff about me:</h2>
+    <p>{{user.funStuff}}</p>
+    <h2>Something else about me:</h2>
+    <p>{{user.otherStuff}}</p>
+    <h2>Links I like:</h2>
+    <ul>
+        <li v-for="link in user.linkList">
+            <a :href="link">{{link}}</a>
+        </li>
+    </ul>
+    </div>
+</script>
+
+<!--posts list template-->
 <script id="posts" type="text/x-template">
     <ul class="content posts">
         <li v-for="post in posts" class="box">
             <router-link :to="'/posts/' + post.id"><h1 class="">{{ post.title }}</h1></router-link>
-            <p><strong>{{ post.author.name}}</strong> •
+            <p><router-link
+                    :to="'/users/' + post.author.id"><strong>{{
+                post.author.name }}</strong></router-link>•
                 <small>{{ post.createTime | longToDate }}</small>
             </p>
             <section> {{ post.content.substring(0, 200) }} ...</section>
@@ -72,12 +99,13 @@
     </ul>
 </script>
 
-<!--posts list template-->
+<!--post detail template-->
 <script id="post-detail" type="text/x-template">
     <article class="content post">
         <h1 class="has-text-centered">{{ post.title }}</h1>
-        <p class="has-text-right"><strong>{{ post.author.name }}
-            ({{post.author.id}})</strong> •
+        <p class="has-text-right"><router-link
+                :to="'/users/' + post.author.id"> <strong>{{
+            post.author.name }} </strong> </router-link>•
             <small>{{ post.createTime | longToDate }}</small>
         </p>
         <section v-html="compiledMarkdown"></section>
@@ -87,16 +115,18 @@
 <!--login form template-->
 <script id="login-form" type="text/x-template">
     <form @submit="handleSubmit">
-        <label class="label" for="name">用户名</label>
+        <label class="label" for="name">Username:</label>
         <p class="control">
-            <input v-model="name" class="input" type="text" id="name" placeholder="请输入用户名">
+            <input v-model="name" class="input" type="text" id="name"
+                   placeholder="Please put username here">
         </p>
-        <label class="label" for="password">密码</label>
+        <label class="label" for="password">Password:</label>
         <p class="control">
-            <input v-model="password" class="input" type="password" id="password" placeholder="请输入密码">
+            <input v-model="password" class="input" type="password"
+                   id="password" placeholder="Please put password here">
         </p>
         <p class="control">
-            <input class="button is-primary is-12" type="submit" value="登录">
+            <input class="button is-primary is-12" type="submit" value="Login">
         </p>
     </form>
 </script>
@@ -120,6 +150,12 @@
                    id="password-again"
                    placeholder="Please put password here again">
         </p>
+        <label class="label" for="fullName">Full name:</label>
+        <p class="control">
+            <input v-model="fullName" class="input" type="text"
+                   id="fullName"
+                   placeholder="Please put your full name here.">
+        </p>
         <label class="label" for="classTaken">What classes have you
             taken:</label>
         <p class="control">
@@ -129,20 +165,20 @@
         </p>
         <label class="label" for="funStuff">Any fun stuff:</label>
         <p class="control">
-            <input v-model="classTaken" class="input" type="text"
+            <input v-model="funStuff" class="input" type="text"
                    id="funStuff"
                    placeholder="Please put some fun stuff you've done(separated by comma)">
         </p>
         <label class="label" for="otherStuff">What else do you want to
              tell others:</label>
         <p class="control">
-            <input v-model="classTaken" class="input" type="text"
+            <input v-model="otherStuff" class="input" type="text"
                    id="otherStuff"
                    placeholder="Put any other stuff">
         </p>
         <label class="label" for="links">Any link you want to share:</label>
         <p class="control">
-            <input v-model="classTaken" class="input" type="text"
+            <input v-model="links" class="input" type="text"
                    id="links"
                    placeholder="Put any link here(separated by comma)">
         </p>
@@ -164,6 +200,7 @@
                                   value="I'm done"></p>
     </form>
 </script>
+
 
 <!-- alert template-->
 <script id="alert" type="text/x-template">

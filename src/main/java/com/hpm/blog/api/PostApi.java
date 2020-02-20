@@ -68,7 +68,7 @@ public class PostApi {
     public Object delete(@PathVariable int id, @CurrentUser User currentUser) {
         postService.delete(id, currentUser);
         JSONObject jsonObject = new JSONObject();
-        jsonObject.put("message", "删除成功");
+        jsonObject.put("message", "Remove succeed");
         return jsonObject;
     }
 }

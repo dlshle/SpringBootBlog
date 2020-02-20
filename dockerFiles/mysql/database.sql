@@ -14,7 +14,6 @@
  Date: 02/07/2017 19:55:25 PM
 */
 
-SET NAMES utf8mb4;
 SET FOREIGN_KEY_CHECKS = 0;
 
 -- ----------------------------
@@ -29,7 +28,7 @@ CREATE TABLE `post` (
   `create_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `update_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB AUTO_INCREMENT=1;
 
 -- ----------------------------
 --  Table structure for `user`
@@ -46,7 +45,7 @@ CREATE TABLE `user` (
   `links` varchar(512),
   PRIMARY KEY (`id`),
   UNIQUE KEY `user_name_uindex` (`name`)
-) ENGINE=InnoDB AUTO_INCREMENT=14 DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB AUTO_INCREMENT=14;
 
 SET FOREIGN_KEY_CHECKS = 1;
 
