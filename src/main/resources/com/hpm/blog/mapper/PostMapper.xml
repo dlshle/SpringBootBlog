@@ -52,9 +52,13 @@
             post.content ,
             post.create_time ,
             post.update_time,
-            <!-- 作者信息，password 不需要就不查了 -->
             `user`.id as author__id,
-            `user`.`name` as author__name
+            `user`.`name` as author__name,
+            `user`.`full_name` as author__full_name,
+            `user`.`class_taken` as author__class_taken,
+            `user`.`fun_stuff` as author__fun_stuff,
+            `user`.`other_stuff` as author__other_stuff,
+            `user`.`links` as author__links
         FROM post
         LEFT JOIN `user` ON `user`.id=post.author_id
     </sql>

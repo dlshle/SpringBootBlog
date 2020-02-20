@@ -38,9 +38,15 @@ DROP TABLE IF EXISTS `user`;
 CREATE TABLE `user` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(20) NOT NULL,
+  `full_name` varchar(128) NOT NULL,
   `password` varchar(255) NOT NULL,
+  `fun_stuff` varchar(255),
+  `other_stuff` varchar(255),
+  `class_taken` varchar(512),
+  `links` varchar(512),
   PRIMARY KEY (`id`),
   UNIQUE KEY `user_name_uindex` (`name`)
 ) ENGINE=InnoDB AUTO_INCREMENT=14 DEFAULT CHARSET=utf8mb4;
 
 SET FOREIGN_KEY_CHECKS = 1;
+

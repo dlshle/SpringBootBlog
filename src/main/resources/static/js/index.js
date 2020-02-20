@@ -127,11 +127,11 @@ var LoginForm = {
         handleSubmit: function (e) {
             e.preventDefault()
             if (this.name === '') {
-                handleError('用户名不能为空')
+                handleError('Username can not be empty')
                 return false
             }
             if (this.password === '') {
-                handleError('密码不能为空')
+                handleError('Password can not be empty')
                 return false
             }
             axios.post('/api/authentication', {
@@ -157,32 +157,46 @@ var SignupForm = {
         return {
             name: '',
             password: '',
-            passwordAgain: ''
+            fullName: '',
+            passwordAgain: '',
+            classTaken: '',
+            funStuff: '',
+            otherStuff: '',
+            links: ''
         }
     },
     methods: {
         handleSubmit: function (e) {
             e.preventDefault()
             if (this.name === '') {
-                handleError('用户名不能为空')
+                handleError('Username can not be empty')
                 return false
             }
             if (this.password === '') {
-               handleError('密码不能为空')
+               handleError('Password can not be empty')
                 return false
             }
             if (this.password !== this.passwordAgain) {
-                handleError('两次输入的密码不一致')
+                handleError('Passwords are not identical')
                 return false
+            }
+            if (this.fullName === '') {
+                handleError('Full name can not be empty. You do have a name')
+                return false;
             }
             axios.post('/api/user', {
                 name: this.name,
-                password: this.password
+                password: this.password,
+                fullName: this.fullName,
+                classTaken: this.classTaken,
+                funStuff: this.funStuff,
+                otherStuff: this.otherStuff,
+                links: this.links
             }).then(function (res) {
                 if (res.data.error) {
                     handleError(res.data.error)
                 } else {
-                    emitInfo('注册成功，请登录')
+                    emitInfo('Register finished, please sign in')
                     this.$router.push('/login')
                 }
             }.bind(this))
@@ -244,7 +258,7 @@ var NewPost = {
     beforeRouteEnter: function (to, from, next) {
         if (sessionStorage.getItem('token') === null) {
             next({path: 'login'})
-            emitInfo('请先登录')
+            emitInfo('Please log in first')
         } else {
             next()
         }
@@ -252,11 +266,11 @@ var NewPost = {
     methods: {
         handleSubmit: function (e) {
             if (this.title === null || this.title === '') {
-                handleError('标题不能为空')
+                handleError('Title can not be empty')
                 return false
             }
             if (this.content === null || this.content === '') {
-                handleError('内容不能为空')
+                handleError('Content can not be empty')
                 return false
             }
             axios.post('/api/post', {
