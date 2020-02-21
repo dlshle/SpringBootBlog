@@ -8,6 +8,7 @@
     <link rel="stylesheet" href="css/bulma.css">
     <link rel="stylesheet" href="css/font-awesome.min.css">
     <link rel="stylesheet" href="css/common.css">
+	<link rel="stylesheet" href="css/clickable_div.css">
 </head>
 <body>
 
@@ -59,28 +60,41 @@
     </header>
 </script>
 
-<!--posts list template-->
+<!--user detail template-->
 <script id="user-detail" type="text/x-template">
     <div>
-    <h1 class="has-text-centered">All about {{ user.fullName }}!</h1>
+    <h1 class="has-text-centered">All about <color="red">{{ user.fullName }}!</color></h1>
     Hi, my name is {{ user.fullName }}! It's very nice to meet you! Here, you
     can see all the information about me!
-    <h2>Classes I've taken:</h2>
-    <ul>
-        <li v-for="theClass in user.classList">
-            <p>{{theClass}}</p>
-        </li>
-    </ul>
-    <h2>Some fun stuff about me:</h2>
-    <p>{{user.funStuff}}</p>
-    <h2>Something else about me:</h2>
-    <p>{{user.otherStuff}}</p>
+	<div class="clicker" tabindex="1">
+	<h2>Classes I've taken:</h2></div>
+		<div class="hiddendiv">
+            <ul>
+                <li v-for="theClass in user.classList">
+                    <p>{{theClass}}</p>
+                </li>
+            </ul>
+		</div>
+
+    <div class="clicker" tabindex="2"><h2>Some fun stuff about me:</h2></div>
+		<div class="hiddendiv">
+				<p>{{user.funStuff}}</p>
+		</div>
+	
+	<div class="clicker" tabindex="3">
+    <h2>Something else about me:</h2></div>
+		<div class="hiddendiv">
+            <p>{{user.otherStuff}}</p>
+		</div>
+	
+	<hr>
+	
     <h2>Links I like:</h2>
-    <ul>
-        <li v-for="link in user.linkList">
-            <a :href="link">{{link}}</a>
-        </li>
-    </ul>
+            <ul>
+                <li v-for="link in user.linkList">
+                    <a :href="link">{{link}}</a>
+                </li>
+            </ul>
     </div>
 </script>
 

@@ -233,8 +233,6 @@ var PostDetail = {
                 return
             } else {
                 this.post = res.data
-                // DEBUGGING
-                console.log(this.post);
             }
         }.bind(this))
     },
@@ -261,7 +259,7 @@ var UserDetail = {
                 funStuff: '',
                 otherStuff: '',
                 links:  '',
-                linkList: []
+                linkList: [],
             }
         }
     },
@@ -272,8 +270,6 @@ var UserDetail = {
                 return
             } else {
                 this.user = res.data;
-                // DEBUGGING
-                console.log(res.data);
                 if (this.user.classTaken && this.user.classTaken.length > 0)
                     this.user.classList = this.user.classTaken.split(",");
                 if (this.user.links && this.user.links.length > 0)
