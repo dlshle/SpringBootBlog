@@ -1,14 +1,15 @@
 .clicker {
-width: 640px;
-outline: solid;
-cursor: pointer;
+    width: 640px;
+    outline: solid;
+    cursor: pointer;
 }
 
 .hiddendiv{
-display: none;
-width: 640px;
+    display: none;
+    width: 640px;
+    margin-top: 20px;
 }
 
 .clicker:focus + .hiddendiv{
-display:block;
+    display:block;
 }

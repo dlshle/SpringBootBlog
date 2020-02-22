@@ -260,6 +260,7 @@ var UserDetail = {
                 otherStuff: '',
                 links:  '',
                 linkList: [],
+                isCurrUser: false
             }
         }
     },
@@ -274,6 +275,7 @@ var UserDetail = {
                     this.user.classList = this.user.classTaken.split(",");
                 if (this.user.links && this.user.links.length > 0)
                     this.user.linkList = this.user.links.split(",");
+                this.isCurrUser = (sessionStorage.getItem("currentUser")?(sessionStorage.getItem("currentUser").name === this.user.name):false);
                 // DEBUGGING
                 console.log(this.user);
             }
@@ -325,6 +327,63 @@ var NewPost = {
     }
 }
 
+var UserUpdate = {
+    template: '#user-update',
+    data: function () {
+        return {
+            fullName: '',
+            classTaken: '',
+            funStuff: '',
+            otherStuff: '',
+            links: ''
+        }
+
+    },
+    beforeRouteEnter: function (to, from, next) {
+        if (sessionStorage.getItem('token') === null) {
+            next({path: 'login'})
+            emitInfo('Please log in first')
+        } else {
+            this.fullName = sessionStorage.getItem("currentUser").fullName;
+            this.classTaken = sessionStorage.getItem("currentUser").classTaken;
+            this.funStuff = sessionStorage.getItem("currentUser").funStuff;
+            this.otherStuff = sessionStorage.getItem("currentUser").otherStuff;
+            this.links = sessionStorage.getItem("currentUser").links;
+            next()
+        }
+    },
+    methods: {
+        handleSubmit: function (e) {
+            if (this.fullName === null || this.fullName === '') {
+                handleError('Full name can not be empty')
+                return false
+            }
+            if (this.id === null || this.id <= 0) {
+                handleError('User id is invalid')
+                return false
+            }
+            axios.put('/api/user', {
+                    id: sessionStorage.getItem("currentUser").id,
+                    name: sessionStorage.getItem("currentUser").name,
+                    fullName: this.fullName,
+                    classTaken: this.classTaken,
+                    funStuff: this.funStuff,
+                    otherStuff: this.otherStuff,
+                    links: this.links
+                }, {
+                    headers: {token: sessionStorage.getItem('token')}
+                }
+            ).then(function (res) {
+                if (res.data.error) {
+                    handleError(res.data.error)
+                    return
+                }
+                this.$router.push('/users/' + res.data.id)
+            }.bind(this))
+        }
+    }
+}
+
 var routes = [
     {path: '/', component: PostList},
     {path: '/posts', component: PostList},
@@ -332,7 +391,8 @@ var routes = [
     {path: '/signup', component: SignupForm},
     {path: '/posts/new', component: NewPost},
     {path: '/posts/:id', component: PostDetail},
-    {path: '/users/:id', component: UserDetail}
+    {path: '/users/:id', component: UserDetail},
+    {path: '/users/update', component: UserUpdate}
 ]
 
 var router = new VueRouter({

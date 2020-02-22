@@ -2,6 +2,7 @@ package com.hpm.blog.api;
 
 
 import com.alibaba.fastjson.JSONObject;
+import com.hpm.blog.annotation.LoginRequired;
 import com.hpm.blog.model.User;
 import com.hpm.blog.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,6 +26,17 @@ public class UserApi {
             return jsonObject;
         }
         return userService.add(user);
+    }
+
+    @PutMapping("")
+    @LoginRequired
+    public Object save(@RequestBody User user) {
+        if (userService.findById(user.getId()) == null) {
+            JSONObject jsonObject = new JSONObject();
+            jsonObject.put("error","Invalid user id");
+            return jsonObject;
+        }
+        return userService.save(user);
     }
 
     @GetMapping("{id}")

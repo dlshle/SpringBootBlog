@@ -25,6 +25,11 @@ public class UserService {
         return findById(user.getId());
     }
 
+    public User save(User user) {
+        userMapper.save(user);
+        return findByName(user.getName());
+    }
+
     private String passwordToHash(String password) {
         try {
             MessageDigest digest = MessageDigest.getInstance("SHA-256");
