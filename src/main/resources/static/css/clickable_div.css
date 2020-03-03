@@ -1,13 +1,20 @@
 .clicker {
     width: 640px;
-    outline: solid;
+    outline: 2px solid black;
     cursor: pointer;
+    font-size: 16px;
+    color: #00b89c;
+    margin: 5px;
+}
+
+.clicker:hover {
+    background-color: #2f2f2f;
+    color: #b5b5b5;
 }
 
 .hiddendiv{
     display: none;
     width: 640px;
-    margin-top: 20px;
 }
 
 .clicker:focus + .hiddendiv{

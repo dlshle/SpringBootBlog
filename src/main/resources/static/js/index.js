@@ -155,6 +155,7 @@ var SignupForm = {
     template: '#signup-form',
     data: function () {
         return {
+            email: '',
             name: '',
             password: '',
             fullName: '',
@@ -168,6 +169,10 @@ var SignupForm = {
     methods: {
         handleSubmit: function (e) {
             e.preventDefault()
+            if (this.email === '') {
+                handleError('Email can not be empty')
+                return false
+            }
             if (this.name === '') {
                 handleError('Username can not be empty')
                 return false
@@ -182,9 +187,10 @@ var SignupForm = {
             }
             if (this.fullName === '') {
                 handleError('Full name can not be empty. You do have a name')
-                return false;
+                return false
             }
             axios.post('/api/user', {
+                email: this.email,
                 name: this.name,
                 password: this.password,
                 fullName: this.fullName,
@@ -240,7 +246,7 @@ var PostDetail = {
         longToDate: PostList.filters.longToDate
     },
     computed: {
-        compiledMarkdown: function () {
+        compiledText: function () {
             return marked(this.post.content)
         }
     }
@@ -252,6 +258,7 @@ var UserDetail = {
         return {
             user: {
                 name: '',
+                email: '',
                 password: '',
                 fullName: '',
                 classTaken: '',
@@ -275,7 +282,9 @@ var UserDetail = {
                     this.user.classList = this.user.classTaken.split(",");
                 if (this.user.links && this.user.links.length > 0)
                     this.user.linkList = this.user.links.split(",");
-                this.isCurrUser = (sessionStorage.getItem("currentUser")?(sessionStorage.getItem("currentUser").name === this.user.name):false);
+                if (sessionStorage.getItem("currentUser")) {
+                    this.user.isCurrUser = JSON.parse(sessionStorage.getItem("currentUser")).id === this.user.id;
+                }
                 // DEBUGGING
                 console.log(this.user);
             }
@@ -331,6 +340,9 @@ var UserUpdate = {
     template: '#user-update',
     data: function () {
         return {
+            name: '',
+            email: '',
+            password: '',
             fullName: '',
             classTaken: '',
             funStuff: '',
@@ -344,13 +356,25 @@ var UserUpdate = {
             next({path: 'login'})
             emitInfo('Please log in first')
         } else {
-            this.fullName = sessionStorage.getItem("currentUser").fullName;
-            this.classTaken = sessionStorage.getItem("currentUser").classTaken;
-            this.funStuff = sessionStorage.getItem("currentUser").funStuff;
-            this.otherStuff = sessionStorage.getItem("currentUser").otherStuff;
-            this.links = sessionStorage.getItem("currentUser").links;
             next()
         }
+    },
+    mounted: function () {
+        // get data for present
+        axios.get('/api/user/' + JSON.parse(sessionStorage.getItem('currentUser')).id).then(function (res) {
+            if (res.data.error) {
+                handleError(res.data.error)
+                return
+            } else {
+                this.id = res.data.id;
+                this.name = res.data.name;
+                this.fullName = res.data.fullName;
+                this.classTaken = res.data.classTaken;
+                this.funStuff = res.data.funStuff;
+                this.otherStuff = res.data.otherStuff;
+                this.links = res.data.links;
+            }
+        }.bind(this))
     },
     methods: {
         handleSubmit: function (e) {
@@ -362,15 +386,27 @@ var UserUpdate = {
                 handleError('User id is invalid')
                 return false
             }
-            axios.put('/api/user', {
-                    id: sessionStorage.getItem("currentUser").id,
-                    name: sessionStorage.getItem("currentUser").name,
-                    fullName: this.fullName,
-                    classTaken: this.classTaken,
-                    funStuff: this.funStuff,
-                    otherStuff: this.otherStuff,
-                    links: this.links
-                }, {
+            let requestObject = {
+                id: this.id,
+                name: this.name,
+                email: this.email,
+                password: this.password,
+                fullName: this.fullName,
+                classTaken: this.classTaken,
+                funStuff: this.funStuff,
+                otherStuff: this.otherStuff,
+                links: this.links
+            }
+
+            // if email isn't defined, do not update
+            if (this.email === '')
+                delete requestObject.email
+            // if password isn't defined, do not update
+            if (this.password === '')
+                delete requestObject.password
+            console.log("requestObj:"+requestObject)
+
+            axios.put('/api/user', requestObject, {
                     headers: {token: sessionStorage.getItem('token')}
                 }
             ).then(function (res) {
@@ -392,7 +428,7 @@ var routes = [
     {path: '/posts/new', component: NewPost},
     {path: '/posts/:id', component: PostDetail},
     {path: '/users/:id', component: UserDetail},
-    {path: '/users/update', component: UserUpdate}
+    {path: '/update', component: UserUpdate}
 ]
 
 var router = new VueRouter({

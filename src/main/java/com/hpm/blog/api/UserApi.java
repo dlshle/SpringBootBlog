@@ -18,6 +18,17 @@ public class UserApi {
         this.userService = userService;
     }
 
+    // NEW FEATURE
+    @GetMapping("/email/{email}")
+    public Object findByEmail(@PathVariable String email) {
+        if (userService.findByEmail(email) == null) {
+            JSONObject jsonObject = new JSONObject();
+            jsonObject.put("error","Invalid email");
+            return jsonObject;
+        }
+        return userService.findByEmail(email);
+    }
+
     @PostMapping("")
     public Object add(@RequestBody User user) {
         if (userService.findByName(user.getName()) != null) {
@@ -41,6 +52,11 @@ public class UserApi {
 
     @GetMapping("{id}")
     public Object findById(@PathVariable int id) {
+        if (id <= 0) {
+            JSONObject jsonObject = new JSONObject();
+            jsonObject.put("error","Invalid user id");
+            return jsonObject;
+        }
         return userService.findById(id);
     }
 }

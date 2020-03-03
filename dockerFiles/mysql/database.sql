@@ -36,6 +36,7 @@ CREATE TABLE `post` (
 DROP TABLE IF EXISTS `user`;
 CREATE TABLE `user` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
+  `email` varchar(128) NOT NULL,
   `name` varchar(20) NOT NULL,
   `full_name` varchar(128) NOT NULL,
   `password` varchar(255) NOT NULL,

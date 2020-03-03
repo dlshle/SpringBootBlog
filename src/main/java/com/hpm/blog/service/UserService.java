@@ -26,6 +26,9 @@ public class UserService {
     }
 
     public User save(User user) {
+        // only save hashed password
+        if (user.getPassword() != null)
+            user.setPassword(passwordToHash(user.getPassword()));
         userMapper.save(user);
         return findByName(user.getName());
     }
@@ -36,8 +39,6 @@ public class UserService {
             digest.update(password.getBytes());
             byte[] src = digest.digest();
             StringBuilder stringBuilder = new StringBuilder();
-            // 字节数组转16进制字符串
-            // https://my.oschina.net/u/347386/blog/182717
             for (byte aSrc : src) {
                 String s = Integer.toHexString(aSrc & 0xFF);
                 if (s.length() < 2) {
@@ -63,8 +64,14 @@ public class UserService {
         return userMapper.findOne(param);
     }
 
+    // NEW FEATURE
+    public User findByEmail(String email) {
+        User param = new User();
+        param.setEmail(email);
+        return userMapper.findOne(param);
+    }
+
     public boolean comparePassword(User user, User userInDataBase) {
-        return passwordToHash(user.getPassword())      // 将用户提交的密码转换为 hash
-                .equals(userInDataBase.getPassword()); // 数据库中的 password 已经是 hash，不用转换
+        return passwordToHash(user.getPassword()).equals(userInDataBase.getPassword());
     }
 }

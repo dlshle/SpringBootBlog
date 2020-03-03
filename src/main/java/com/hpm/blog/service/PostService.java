@@ -30,7 +30,7 @@ public class PostService {
         Post param = new Post();
         param.setId(id);
         Post post = postMapper.findOne(param);
-        checkNotNull(post, "文章不存在");
+        checkNotNull(post, "Post does not exist");
         return post;
     }
 
@@ -39,7 +39,7 @@ public class PostService {
     }
 
     public Post update(Post post, User currentUser) {
-        checkNotNull(post.getId(), "id不能为空");
+        checkNotNull(post.getId(), "Post id can not be empty");
         checkOwner(post.getId(), currentUser);
         postMapper.update(post);
         return findById(post.getId());
@@ -48,7 +48,7 @@ public class PostService {
     private void checkOwner(Integer id, User currentUser) {
         Post post = findById(id);
         if (!post.getAuthorId().equals(currentUser.getId())) {
-            throw new RuntimeException("不能删除或修改别人的文章");
+            throw new RuntimeException("Can not remove other's post");
         }
     }
 
